@@ -30,14 +30,32 @@ func CreateCLI() *CLI {
 	c.app.Version = version.Version()
 	c.app.Commands = cli.Commands{
 		{
-			Name:   "import",
-			Usage:  "import bookmarks from various sources",
-			Action: c.importStub,
+			Name:  "import",
+			Usage: "import bookmarks from various sources",
+			Subcommands: []*cli.Command{
+				{
+					Name:   "buku",
+					Usage:  "import bookmarks from Buku",
+					Action: c.importBuku,
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:     "db-file",
+							Aliases:  []string{"d"},
+							Usage:    "Buku database file",
+							Required: false,
+						},
+					},
+				},
+			},
 		},
 	}
 	return c
 }
 
-func (c *CLI) importStub(ctx *cli.Context) error {
-	return importBookmarks(typeBuku)
+func (c *CLI) importBuku(ctx *cli.Context) error {
+	dbFile := ctx.String("db-file")
+	if dbFile == "" {
+		dbFile = getDefaultBukuDatabase()
+	}
+	return importBukuDB(dbFile)
 }
