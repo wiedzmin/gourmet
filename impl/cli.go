@@ -1,6 +1,9 @@
 package impl
 
-import "github.com/urfave/cli/v2"
+import (
+	"github.com/urfave/cli/v2"
+	"github.com/wiedzmin/gourmet/version"
+)
 
 const (
 	_ = iota
@@ -22,9 +25,9 @@ func CreateCLI() *CLI {
 		app: cli.NewApp(),
 	}
 
-	// TODO: abstract away
-	c.app.Name = "Gourmet bookmarks manager"
-	c.app.Version = "0.1" // TODO: use semver
+	c.app.Name = version.Description
+	c.app.Usage = version.Usage
+	c.app.Version = version.Version()
 	c.app.Commands = cli.Commands{
 		{
 			Name:   "import",
