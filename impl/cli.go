@@ -5,11 +5,6 @@ import (
 	"github.com/wiedzmin/gourmet/version"
 )
 
-const (
-	_ = iota
-	typeBuku
-)
-
 // CLI is the command line interface app object structure
 type CLI struct {
 	app *cli.App
