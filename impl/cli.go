@@ -1,6 +1,9 @@
 package impl
 
 import (
+	"errors"
+	"os"
+
 	"github.com/urfave/cli/v2"
 	"github.com/wiedzmin/gourmet/version"
 )
@@ -41,6 +44,19 @@ func CreateCLI() *CLI {
 						},
 					},
 				},
+				{
+					Name:   "org",
+					Usage:  "import bookmarks from Org mode",
+					Action: c.importOrg,
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:     "org-file",
+							Aliases:  []string{"f"},
+							Usage:    "Buku database file",
+							Required: true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -53,4 +69,15 @@ func (c *CLI) importBuku(ctx *cli.Context) error {
 		dbFile = getDefaultBukuDatabase()
 	}
 	return importBukuDB(dbFile)
+}
+
+func (c *CLI) importOrg(ctx *cli.Context) error {
+	orgFile := ctx.String("org-file")
+	if orgFile == "" {
+		return errors.New("missing Org file")
+	}
+	if _, err := os.Stat(orgFile); os.IsNotExist(err) {
+		return err
+	}
+	return importOrg(orgFile)
 }
